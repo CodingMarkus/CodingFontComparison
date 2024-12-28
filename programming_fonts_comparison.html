@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Coding Font Comparison</title>
+		<meta charset="utf-8">
+
+		<script type="text/javascript">
+			var CODING_TEST_STRING =
+				"`<<-->><=>~-==-+*^!?__[[]]{{}}(())O0iIl1.,:;#%$&@''\"\"'";
+			var TEXT_TEST_STRING = "0123456789"
+				+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+				+ "abcdefghijklmnopqrstuvwxyz";
+
+			// Font variant flags
+			var BOLD_FLAG    =  1;
+			var ITALIC_FLAG  =  2;
+			var OBLIQUE_FLAG =  4;
+
+			// The different fonts
+			var ALL_FONTS = [
+				{
+					name: "Source Code Pro",
+					filename: "SourceCodePro-Regular.otf",
+					archive: "Source_Code_Pro.zip",
+					license: "LICENSE.txt",
+					baseSize: 9,
+					flags: BOLD_FLAG,
+					variants: [ "ExtraLight", "Light", "Semibold", "Black" ]
+				}, {
+					name: "Bitstream Vera Sans Mono",
+					filename: "VeraMono.ttf",
+					archive: "Bitstream_Vera_Sans_Mono.zip",
+					license: "COPYRIGHT.TXT",
+					baseSize: 9,
+					flags: BOLD_FLAG | OBLIQUE_FLAG
+				}, {
+					name: "DejaVu Sans Mono",
+					filename: "DejaVuSansMono.ttf",
+					archive: "DejaVu_Sans_Mono.zip",
+					license: "License.html",
+					baseSize: 9,
+					flags: BOLD_FLAG | OBLIQUE_FLAG
+				}, {
+					name: "Liberation Mono",
+					filename: "LiberationMono-Regular.ttf",
+					archive: "Liberation_Mono.zip",
+					license: "LICENSE.txt",
+					baseSize: 9,
+					flags: BOLD_FLAG | ITALIC_FLAG
+				}, {
+					name: "Panic Sans",
+					filename: "PanicSans.otf",
+					archive: "Panic_Sans.zip",
+					license: "license.txt",
+					baseSize: 9,
+					flags: BOLD_FLAG | OBLIQUE_FLAG
+				}, {
+					name: "Envy Code R",
+					filename: "Envy Code R.ttf",
+					archive: "Envy_Code_R.zip",
+					license: "LICENSE.md",
+					baseSize: 9,
+					flags: BOLD_FLAG | ITALIC_FLAG
+				}, {
+					name: "Share-TechMono",
+					filename: "Share-TechMono.otf",
+					archive: "Share-TechMono.zip",
+					license: "LICENSE.txt",
+					baseSize: 9
+				}, {
+					name: "Luxi Mono",
+					filename: "luximr.ttf",
+					archive: "Luxi_Mono.zip",
+					license: "LICENSE.txt",
+					baseSize: 8,
+					flags: BOLD_FLAG | OBLIQUE_FLAG
+				}, {
+					name: "Droid Sans Mono",
+					filename: "DroidSansMono.ttf",
+					archive: "Droid_Sans_Mono.zip",
+					license: "LICENSE.txt",
+					baseSize: 9
+				}, {
+					name: "Anonymous Pro",
+					filename: "Anonymous Pro.ttf",
+					archive: "Anonymous_Pro.zip",
+					license: "LICENSE.txt",
+					baseSize: 9,
+					flags: BOLD_FLAG | ITALIC_FLAG
+				}, {
+					name: "Terminus TTF",
+					filename: "TerminusTTF-4.49.3.ttf",
+					archive: "Terminus_TTF.zip",
+					license: "COPYING.txt",
+					baseSize: 10,
+					flags: BOLD_FLAG
+				}, {
+					name: "Inconsolata",
+					filename: "Inconsolata.otf",
+					archive: "Inconsolata.zip",
+					license: "LICENSE.txt",
+					baseSize: 10,
+				}, {
+					name: "M+ 1m",
+					filename: "mplus-1m-regular.ttf",
+					archive: "M+_1m.zip",
+					license: "LICENSE.txt",
+					baseSize: 9,
+					flags: BOLD_FLAG,
+					variants: [ "Light", "Thin", "Medium"]
+				}, {
+					name: "M+ 1mn",
+					filename: "mplus-1mn-regular.ttf",
+					archive: "M+_1mn.zip",
+					license: "LICENSE.txt",
+					baseSize: 9,
+					flags: BOLD_FLAG,
+					variants: [ "Light", "Thin", "Medium"]
+				}, {
+					name: "M+ 2m",
+					filename: "mplus-2m-regular.ttf",
+					archive: "M+_2m.zip",
+					license: "LICENSE.txt",
+					baseSize: 9,
+					flags: BOLD_FLAG,
+					variants: [ "Light", "Thin", "Medium"]
+				}, {
+					name: "Andale Mono",
+					filename: "Andale Mono.ttf",
+					archive: "Andale_Mono.zip",
+					license: "License.txt",
+					baseSize: 9
+				},
+				{
+					name: "Hack",
+					filename: "Hack-Regular.ttf",
+					archive: "Hack.zip",
+					license: "LICENSE.md",
+					baseSize: 9,
+					flags: BOLD_FLAG | ITALIC_FLAG
+				},
+				{
+					name: "Hack+slashedZero",
+					displayName: "Hack "
+						+ "<span class=\"nobreak\">(+ slashed-zero)</span>",
+					filename: "Hack-Regular.ttf",
+					archive: "Hack+slashedZero.zip",
+					license: "LICENSE.md",
+					baseSize: 9,
+					flags: BOLD_FLAG | ITALIC_FLAG,
+					settings: "mods.html"
+				},
+				{
+					name: "CommitMono-CodingMarkus",
+					filename: "CommitMono-CodingMarkus-450-Regular.otf",
+					archive: "CommitMono-CodingMarkus.zip",
+					license: "license.txt",
+					baseSize: 9,
+					flags: BOLD_FLAG | ITALIC_FLAG,
+					settings: "custom-settings.json"
+				},
+				{
+					name: "CommitMono",
+					filename: "CommitMono-400-Regular.otf",
+					archive: "CommitMono.zip",
+					license: "license.txt",
+					settings: "custom-settings.json",
+					baseSize: 9,
+					flags: BOLD_FLAG | ITALIC_FLAG
+				}
+			];
+
+			document.write("<style type=\"text/css\">\n");
+			for (var index in ALL_FONTS) {
+				document.write("@font-face {\n");
+				document.write("  font-family: '"
+					+ ALL_FONTS[index].name + "';\n"
+				);
+				document.write("  src: url('fonts/"
+					+ ALL_FONTS[index].name + "/"
+					+ ALL_FONTS[index].filename + "');\n"
+				);
+				document.write("}\n");
+			}
+			document.write("</style>");
+		</script>
+
+
+		<style type="text/css">
+			.nobreak {
+				white-space: nowrap;
+			}
+
+			.fontTable {
+				border: thin solid black;
+				margin-bottom: 4em;
+			}
+
+			.fontTable th {
+				border: thin solid black;
+				padding: 2px 4px;
+			}
+
+			.fontTable td {
+				border: thin solid black;
+				padding: 2px 4px;
+				vertical-align: middle;
+			}
+
+			.fontName {
+				text-align: left;
+			}
+
+			.fontSize {
+				text-align: center;
+			}
+
+			.fontFlags {
+				text-align: center;
+			}
+
+			.fontVariants {
+				font-size: 0.9em;
+				text-align: center;
+			}
+
+			.fontTestString {
+				white-space: nowrap;
+			}
+
+			.settings {
+				font-size: 0.8em;
+			}
+
+			.settings a {
+			    text-decoration: none;
+			}
+
+			.license {
+				font-size: 0.8em;
+			}
+
+			.license a {
+			    text-decoration: none;
+			}
+
+			.archive {
+				font-size: 0.8em;
+			}
+
+			.archive a {
+			    text-decoration: none;
+			}
+
+		</style>
+
+		<script type="text/javascript">
+			function writeTable( testString )
+			{
+				var tableHeaders = ["Name", "Size", "Test String",
+					"Bold", "Italics", "Oblique", "Other Variants"
+				];
+
+				// Make table with headers
+				document.write("<table class=\"fontTable\">\n<tr>\n");
+				for (var index in tableHeaders) {
+					document.write("<th>" + tableHeaders[index] + "</th>");
+				}
+				document.write("\n<tr>\n");
+
+				// Sort fonts by name
+				var theFonts = ALL_FONTS.slice().sort(function(a, b) {
+					return a.name.localeCompare(b.name);
+				});
+
+				// Iterate over all fonts
+				for (var index in theFonts) {
+					var baseSize;
+					var flags = 0;
+					var SIZES = 4;
+					var styles = new Array();
+
+					// Create styles
+					baseSize = theFonts[index].baseSize;
+					for (var i = 0; i < SIZES; i++) {
+						styles[i] = "font-family: '" + theFonts[index].name
+							+ "'; font-size: " + (baseSize + i) + "pt;";
+					}
+
+					// Name
+					var fontName = theFonts[index].displayName
+						|| theFonts[index].name;
+					document.write("<tr>\n");
+					document.write("<td class=\"fontName\" style=\""
+						+ styles[2] + "\">" + fontName
+					);
+					if (theFonts[index].settings) {
+						document.write("<br><span class=\"settings\">"
+							+ "<a href=\"fonts/"
+							+ theFonts[index].name + "/"
+							+ theFonts[index].settings + "\">-> Settings</a>"
+							+ "</span>"
+						);
+					}
+					if (theFonts[index].license) {
+						document.write("<br><span class=\"license\">"
+							+ "<a href=\"fonts/"
+							+ theFonts[index].name + "/"
+							+ theFonts[index].license + "\">-> License</a>"
+							+ "</span>"
+						);
+					}
+					if (theFonts[index].archive) {
+						document.write("<br><span class=\"archive\">"
+							+ "<a href=\"fonts/"
+							+ theFonts[index].name + "/"
+							+ theFonts[index].archive + "\">-> Download</a>"
+							+ "</span>"
+						);
+					}
+					document.write("</td>");
+
+					// Sizes
+					document.write("<td class=\"fontSize\">");
+					for (var i = 0; i < SIZES; i++) {
+						document.write("<span style=\"" + styles[i] + "\">"
+							+ (baseSize + i) + "</span>"
+						);
+						if (i < SIZES) {
+							document.write("<br>");
+						}
+					}
+					document.write("</td>");
+
+					// Test Strings
+					document.write("<td class=\"fontTestString\">");
+					for (var i = 0; i < SIZES; i++) {
+						document.write("<span style=\"" + styles[i] + "\">"
+							+ testString + "</span>"
+						);
+						if (i < SIZES) {
+							document.write("<br>");
+						}
+					}
+					document.write("</td>");
+
+					// Flags
+					if (theFonts[index].hasOwnProperty("flags")) {
+						flags = theFonts[index].flags;
+					}
+					document.write("<td class=\"fontFlags\">"
+						+ (flags & BOLD_FLAG ? "✅" : "❌") + "</td>"
+					);
+					document.write("<td class=\"fontFlags\">"
+						+ (flags & ITALIC_FLAG ? "✅" : "❌") + "</td>"
+					);
+					document.write("<td class=\"fontFlags\">"
+						+ (flags & OBLIQUE_FLAG ? "✅" : "❌") + "</td>"
+					);
+
+					// Other variants
+					if (theFonts[index].hasOwnProperty("variants")) {
+						document.write("<td class=\"fontVariants\">"
+							+ theFonts[index].variants.join(", ") + "</td>"
+						);
+					} else {
+						document.write("<td>&nbsp;</td>")
+					}
+					document.write("</tr>\n");
+				}
+				document.write("</table>\n");
+			}
+		</script>
+
+		<script type="text/javascript">
+			function fontDropdown( id )
+			{
+				var select = document.createElement("select");
+				select.id = id;
+
+				var sortedFonts = ALL_FONTS.slice().sort(function(a, b) {
+					return a.name.localeCompare(b.name);
+				});
+
+				for (var index in sortedFonts) {
+					var option = document.createElement("option");
+					option.value = sortedFonts[index].name;
+					option.textContent = sortedFonts[index].name;
+					select.appendChild(option);
+				}
+
+				select.setAttribute("onchange", "recreateDirectComparison();");
+				document.write(select.outerHTML);
+			}
+
+
+			function fontSizeDropdown( id )
+			{
+				var select = document.createElement("select");
+				select.id = id;
+
+				for (var i = 6; i <= 24; i++) {
+					var option = document.createElement("option");
+					option.value = i;
+					option.textContent = i;
+					if (i === 11) {
+         			   option.setAttribute("selected", "selected");
+        			}
+					select.appendChild(option);
+				}
+
+				select.setAttribute("onchange", "recreateDirectComparison();");
+				document.write(select.outerHTML);
+			}
+
+
+			function recreateDirectComparison( )
+			{
+				var font1 = document.getElementById("font1Select").value;
+				var font2 = document.getElementById("font2Select").value;
+
+				var font1Size = document.getElementById("font1Size").value;
+				font1Size = font1Size + "pt";
+				var font2Size = document.getElementById("font2Size").value;
+				font2Size = font2Size + "pt";
+
+				var font1Name = document.getElementById("font1Name");
+				font1Name.textContent = font1;
+				font1Name.style.fontFamily = font1;
+
+				var font1String1 = document.getElementById("font1String1");
+				font1String1.style.fontFamily = font1;
+				font1String1.style.fontSize = font1Size;
+
+				var font1String2 = document.getElementById("font1String2");
+				font1String2.style.fontFamily = font1;
+				font1String2.style.fontSize = font1Size;
+
+				var font1Name = document.getElementById("font2Name");
+				font2Name.textContent = font2;
+				font2Name.style.fontFamily = font2;
+
+				var font2String1 = document.getElementById("font2String1");
+				font2String1.style.fontFamily = font2;
+				font2String1.style.fontSize = font2Size;
+
+				var font2String2 = document.getElementById("font2String2");
+				font2String2.style.fontFamily = font2;
+				font2String2.style.fontSize = font2Size;
+			}
+
+		</script>
+	</head>
+
+
+	<body>
+		<h1>Coding Font Comparison</h1>
+		<h2>Coding Test String</h2>
+		<script type="text/javascript">
+			writeTable(CODING_TEST_STRING);
+		</script>
+
+		<h2>Text Test String</h2>
+		<script>
+			writeTable(TEXT_TEST_STRING);
+		</script>
+
+		<p class="nobreak">Font 1:
+			<script type="text/javascript">
+				fontDropdown("font1Select")
+			</script>, Size:
+			<script type="text/javascript">
+				fontSizeDropdown("font1Size")
+			</script>
+		</p>
+
+		<p class="nobreak">
+			Font 2:
+			<script type="text/javascript">
+				fontDropdown("font2Select")
+			</script>, Size:
+			<script type="text/javascript">
+				fontSizeDropdown("font2Size")
+			</script>
+		</p>
+
+		<table class="fontTable">
+			<tr>
+				<td rowspan="2" id="font1Name" class="fontName">Font 1</td>
+				<td id="font1String1" class="fontTestString">
+					<script type="text/javascript">
+						document.write(CODING_TEST_STRING)
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td id="font1String2" class="fontTestString">
+					<script type="text/javascript">
+						document.write(TEXT_TEST_STRING)
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td rowspan="2" id="font2Name" class="fontName">Font 2</td>
+				<td id="font2String1" class="fontTestString">
+					<script type="text/javascript">
+						document.write(CODING_TEST_STRING)
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td id="font2String2" class="fontTestString">
+					<script type="text/javascript">
+						document.write(TEXT_TEST_STRING)
+					</script>
+				</td>
+			</tr>
+		</table>
+
+
+		<script type="text/javascript">
+			recreateDirectComparison()
+		</script>
+
+	</body>
+</html>
